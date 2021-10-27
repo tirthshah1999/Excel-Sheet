@@ -21,14 +21,55 @@ for(let i = 0; i < rows; i++){
 let formulaBar = document.querySelector(".formula-bar");
 formulaBar.addEventListener("keydown", (e) => {
     let inputFormula = formulaBar.value;
-    let address = addressBar.value;
     if(e.key === "Enter" && inputFormula){
+        // Change in formula then break old P-C relation, evaluate new formula and relation
+        let address = addressBar.value;
+        let [cell, cellProp] = getCellAndCellProp(address);
+        if(inputFormula !== cellProp.formula) removeChildFromParent(cellProp.formula);
+
+        addChildToGraphComponent(inputFormula, address);
+        // Check if is cyclic or not
+        let isCyclic = isGraphCyclic(graphComponentMatrix);
+        if(isCyclic){
+            alert("Your formula is cyclic");
+            removeChildFromGraphComponent(inputFormula, address);
+            return;
+        }
+
         let evaluatedValue = evaluateFormula(inputFormula);
         setCellAndCellProp(evaluatedValue, inputFormula, address);
         addChildToParent(inputFormula);
         updateChildrenCells(address);
     }
 })
+
+// Add child as dependency in graph component
+function addChildToGraphComponent(formula, childAddress) {
+    let [crid, ccid] = decodeIDFromAddress(childAddress);
+    let encodedFormula = formula.split(" ");
+    for (let i = 0; i < encodedFormula.length; i++) {
+        let asciiValue = encodedFormula[i].charCodeAt(0);
+        if (asciiValue >= 65 && asciiValue <= 90) {
+            let [prid, pcid] = decodeIDFromAddress(encodedFormula[i]);
+            // B1: A1 + 10
+            graphComponentMatrix[prid][pcid].push([crid, ccid]);
+        }
+    }
+}
+
+// Remove child as dependency in graph component
+function removeChildFromGraphComponent(formula, childAddress) {
+    let [crid, ccid] = decodeIDFromAddress(childAddress);
+    let encodedFormula = formula.split(" ");
+
+    for (let i = 0; i < encodedFormula.length; i++) {
+        let asciiValue = encodedFormula[i].charCodeAt(0);
+        if (asciiValue >= 65 && asciiValue <= 90) {
+            let [prid, pcid] = decodeIDFromAddress(encodedFormula[i]);
+            graphComponentMatrix[prid][pcid].pop();
+        }
+    }
+}
 
 // In formula if it has dependency to somone (b1 has dependency on a1) then add to its parent(a1)
 function addChildToParent(formula){
