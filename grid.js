@@ -45,7 +45,3 @@ function listenerForAddressBar(cell, i, j){
         addressBar.value = `${colNo}${rowNo}`;
     })
 }
-
-// First default click on cell (DOM)
-let cell = document.querySelector(".cell");
-cell.click();

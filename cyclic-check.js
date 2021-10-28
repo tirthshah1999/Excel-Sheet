@@ -1,13 +1,14 @@
 // Storage looks like: [ [[crid,ccid]], [[]], [[]]  ]  child row and col id from address
+let collectedGraphComponent = [];
 let graphComponentMatrix = [];
-for(let i = 0; i < rows; i++){
-    let row = [];
-    for(let j = 0; j < cols; j++){
-        row.push([]); // More than 1 child relation(dependency)
-    }
+// for(let i = 0; i < rows; i++){
+//     let row = [];
+//     for(let j = 0; j < cols; j++){
+//         row.push([]); // More than 1 child relation(dependency)
+//     }
 
-    graphComponentMatrix.push(row);
-}
+//     graphComponentMatrix.push(row);
+// }
 
 function isGraphCyclic(graphComponentMatrix){
     // Dependency
@@ -30,13 +31,13 @@ function isGraphCyclic(graphComponentMatrix){
         for (let j = 0; j < cols; j++) {
             if (visited[i][j] === false) {
                 let response = dfsCycleDetection(graphComponentMatrix, i, j, visited, dfsVisited);
-                // Found cycle so return immediately, no need to explore more path
-                if (response == true) return true;
+                // Found cycle so return its rid, cid (of cell) for cycle trace 
+                if (response === true) return [i, j];  
             }
         }
 
     }
-    return false;
+    return null;
 }
 
 // Start -> vis(TRUE), dfsVis(TRUE)

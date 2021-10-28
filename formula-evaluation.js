@@ -19,7 +19,7 @@ for(let i = 0; i < rows; i++){
 }
 
 let formulaBar = document.querySelector(".formula-bar");
-formulaBar.addEventListener("keydown", (e) => {
+formulaBar.addEventListener("keydown", async (e) => {
     let inputFormula = formulaBar.value;
     if(e.key === "Enter" && inputFormula){
         // Change in formula then break old P-C relation, evaluate new formula and relation
@@ -29,9 +29,13 @@ formulaBar.addEventListener("keydown", (e) => {
 
         addChildToGraphComponent(inputFormula, address);
         // Check if is cyclic or not
-        let isCyclic = isGraphCyclic(graphComponentMatrix);
-        if(isCyclic){
-            alert("Your formula is cyclic");
+        let cycleResponse = isGraphCyclic(graphComponentMatrix);
+        if(cycleResponse){
+            let response = confirm("Your formula is cyclic. Do you want to trace your cyclic path?");
+            while(response === true){
+                await isGraphCyclicTracePath(graphComponentMatrix, cycleResponse);
+                response = confirm("Your formula is cyclic. Do you want to trace your cyclic path?");
+            }
             removeChildFromGraphComponent(inputFormula, address);
             return;
         }

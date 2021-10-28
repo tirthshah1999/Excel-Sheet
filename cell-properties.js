@@ -1,28 +1,32 @@
 // We had written this script after grid, so we can access variables that we have declared in grid.js
+let collectedSheetDB = [];  // Contains all sheetDB
 let sheetDB = [];
 
-for(let i = 0; i < rows; i++){
-    let sheetRow = [];
-    for(let j = 0; j < cols; j++){
-        // Initial Default structure
-        let cellProp = {
-            bold: false,
-            italic: false,
-            underline: false,
-            alignment: "left",
-            fontFamily: "monospace",
-            fontSize: "14",
-            fontColor: "#000000",
-            bgColor: "#000000",
-            value: "",
-            formula: "",
-            children: []
-        }
+// By Default 1st sheet should be there when app opens.
+addSheetBtn.click();
 
-        sheetRow.push(cellProp);
-    }
-    sheetDB.push(sheetRow);
-}
+// for(let i = 0; i < rows; i++){
+//     let sheetRow = [];
+//     for(let j = 0; j < cols; j++){
+//         // Initial Default structure
+//         let cellProp = {
+//             bold: false,
+//             italic: false,
+//             underline: false,
+//             alignment: "left",
+//             fontFamily: "monospace",
+//             fontSize: "14",
+//             fontColor: "#000000",
+//             bgColor: "#000000",
+//             value: "",
+//             formula: "",
+//             children: []
+//         }
+
+//         sheetRow.push(cellProp);
+//     }
+//     sheetDB.push(sheetRow);
+// }
 
 // Selectors for cell properties
 let bold = document.querySelector(".bold");
